@@ -1,3 +1,6 @@
+import { useEffect } from "react";
+import { Link } from "react-router-dom";
+
 /*
   This example requires some changes to your config:
   
@@ -13,6 +16,11 @@
   ```
 */
 export default function LoginForm() {
+  useEffect(() => {
+    const navElements = document.getElementsByTagName("nav");
+    navElements[0].style.display = "none";
+  });
+
   return (
     <>
       {/*
@@ -91,13 +99,15 @@ export default function LoginForm() {
           </form>
 
           <p className="mt-10 text-center text-sm text-gray-500">
-            Not a member?{" "}
-            <a
-              href="#"
+            <Link to="/signup" className="hover:text-indigo-500">
+              Not a member?{" "}
+            </Link>
+            <Link
+              to="/"
               className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
             >
               Start a 14 day free trial
-            </a>
+            </Link>
           </p>
         </div>
       </div>

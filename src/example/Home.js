@@ -1,4 +1,11 @@
+import { useEffect } from "react";
+
 export default function Home() {
+  useEffect(() => {
+    const navElements = document.getElementsByTagName("nav");
+    navElements[0].style.display = "flex";
+  }, []);
+
   return (
     <div className="bg-white">
       <div className="relative isolate py-64 lg:px-8">
