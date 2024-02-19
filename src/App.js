@@ -9,6 +9,7 @@ import Home from "./example/Home";
 import Example from "./example/Example";
 import LoginForm from "./example/LoginForm";
 import SignUp from "./example/SignUp";
+import Posts from "./example/Posts";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/hero" element={<HeroSection />} />
           <Route path="/product" element={<Example />} />
+          <Route path="/posts" element={<Posts />} />
         </Routes>
       </div>
     </Router>

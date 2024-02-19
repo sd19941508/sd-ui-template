@@ -1,5 +1,6 @@
 import { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { testInstance, debounce } from "../api/test-api/api";
 
 /*
   This example requires some changes to your config:
@@ -16,10 +17,31 @@ import { Link } from "react-router-dom";
   ```
 */
 export default function LoginForm() {
+  const navigate = useNavigate();
+
   useEffect(() => {
     const navElements = document.getElementsByTagName("nav");
     navElements[0].style.display = "none";
   });
+
+  const fetchUsersData = async () => {
+    await testInstance
+      .get("/users")
+      .then(function (response) {
+        // handle success
+        console.log(response.data);
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      });
+  };
+  const startNewTrial = async () => {
+    // Navigate to another page
+    await fetchUsersData();
+    // debounce(fetchData, 500);
+    navigate("/");
+  };
 
   return (
     <>
@@ -102,12 +124,14 @@ export default function LoginForm() {
             <Link to="/signup" className="hover:text-indigo-500">
               Not a member?{" "}
             </Link>
-            <Link
-              to="/"
+            <button
+              onClick={() => {
+                startNewTrial();
+              }}
               className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
             >
               Start a 14 day free trial
-            </Link>
+            </button>
           </p>
         </div>
       </div>
