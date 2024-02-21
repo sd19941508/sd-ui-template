@@ -1,21 +1,41 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { Dialog } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-
-const navigation = [
-  { name: "Product", href: "/product" },
-  { name: "Features", href: "/posts" },
-  { name: "Marketplace", href: "#" },
-  { name: "Company", href: "#" },
-];
+import { useSelector, useDispatch } from "react-redux";
+import {
+  decrement,
+  increment,
+  incrementByAmount,
+} from "../reducers/counterSlice";
+import { getUsers } from "../reducers/usersReducer";
 
 export default function LoginForm() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  const count = useSelector((state) => state.counter.value);
+  const userData = useSelector((state) => state.users.userData);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(increment());
+    dispatch(decrement());
+    dispatch(incrementByAmount(40));
+  }, []);
+
+  const navigation = [
+    { name: "Product", href: "/product" },
+    { name: "Features", href: "/posts" },
+    { name: "Marketplace", href: "#" },
+    { name: "Company", href: "#" },
+  ];
+
   return (
     <>
       <header className="absolute inset-x-0 top-0 z-50">
+        Redux count:{count}
+        User: {JSON.stringify(userData[0])}
         <nav
           className="flex items-center justify-between p-6 lg:px-8"
           aria-label="Global"

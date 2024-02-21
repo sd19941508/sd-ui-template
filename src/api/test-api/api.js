@@ -10,7 +10,7 @@ export const debounce = (func, delay) => {
 
 export const testInstance = axios.create({
   baseURL: "https://jsonplaceholder.typicode.com",
-  timeout: 1000,
+  timeout: 5000,
   headers: { "X-Custom-Header": "foobar" },
 });
 
