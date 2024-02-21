@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { GoogleLogin, googleLogout, useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
-import { testInstance, debounce } from "../api/test-api/api";
 import { useSelector, useDispatch } from "react-redux";
-import { getUsers, setUsersData } from "../reducers/usersReducer";
+import { testInstance, debounce } from "../../api/test-api/api";
+import { getUsers, setUsersData } from "../../reducers/usersReducer";
 
 export default function LoginForm() {
   const navigate = useNavigate();

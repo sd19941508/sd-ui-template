@@ -7,8 +7,8 @@ import {
   decrement,
   increment,
   incrementByAmount,
-} from "../reducers/counterSlice";
-import { getUsers } from "../reducers/usersReducer";
+} from "../../reducers/counterSlice";
+import { getUsers } from "../../reducers/usersReducer";
 
 export default function LoginForm() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { testInstance, debounce } from "../api/test-api/api";
+import { testInstance, debounce } from "../../api/test-api/api";
 
 export default function Example() {
   const [postsData, setPostsData] = useState([]);
