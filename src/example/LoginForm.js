@@ -1,23 +1,13 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { testInstance, debounce } from "../api/test-api/api";
+import { useSelector, useDispatch } from "react-redux";
+import { getUsers, setUsersData } from "../reducers/usersReducer";
 
-/*
-  This example requires some changes to your config:
-  
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-      // ...
-      require('@tailwindcss/forms'),
-    ],
-  }
-  ```
-*/
 export default function LoginForm() {
   const navigate = useNavigate();
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const navElements = document.getElementsByTagName("nav");
@@ -30,6 +20,7 @@ export default function LoginForm() {
       .then(function (response) {
         // handle success
         console.log(response.data);
+        dispatch(setUsersData(response.data));
       })
       .catch(function (error) {
         // handle error
