@@ -9,7 +9,6 @@ export default function Example() {
       .then(function (response) {
         // handle success
         setPostsData(response.data);
-        console.log(response.data);
       })
       .catch(function (error) {
         // handle error

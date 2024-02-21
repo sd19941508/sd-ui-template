@@ -27,15 +27,15 @@ export default function LoginForm() {
   const navigation = [
     { name: "Product", href: "/product" },
     { name: "Features", href: "/posts" },
-    { name: "Marketplace", href: "#" },
-    { name: "Company", href: "#" },
+    { name: "Marketplace", href: "/marketplace" },
+    { name: "Company", href: "/company" },
   ];
 
   return (
     <>
       <header className="absolute inset-x-0 top-0 z-50">
-        Redux count:{count}
-        User: {JSON.stringify(userData[0])}
+        {/* Redux count:{count} */}
+        {/* User: {JSON.stringify(userData.length === 0 ? "LIST" : userData)} */}
         <nav
           className="flex items-center justify-between p-6 lg:px-8"
           aria-label="Global"
@@ -127,7 +127,7 @@ export default function LoginForm() {
           </div>
           <div className="hidden lg:flex lg:flex-1 lg:justify-end">
             <Link
-              to="/login/1"
+              to="/login"
               className="text-sm font-semibold leading-6 text-gray-900"
             >
               Log in <span aria-hidden="true">&rarr;</span>

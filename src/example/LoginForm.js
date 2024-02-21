@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { GoogleLogin, googleLogout, useGoogleLogin } from "@react-oauth/google";
+import axios from "axios";
 import { testInstance, debounce } from "../api/test-api/api";
 import { useSelector, useDispatch } from "react-redux";
 import { getUsers, setUsersData } from "../reducers/usersReducer";
@@ -9,17 +11,69 @@ export default function LoginForm() {
 
   const dispatch = useDispatch();
 
+  const [user, setUser] = useState([]);
+  const [profile, setProfile] = useState(null);
+
   useEffect(() => {
     const navElements = document.getElementsByTagName("nav");
     navElements[0].style.display = "none";
   });
+
+  const responseMessage = (response) => {
+    console.log("response");
+    console.log(response);
+  };
+
+  const errorMessage = (error) => {
+    console.log("error");
+    console.log(error);
+  };
+
+  const login = useGoogleLogin({
+    onSuccess: (codeResponse) => {
+      localStorage.setItem("access_token", codeResponse.access_token);
+      setUser(codeResponse);
+    },
+    onError: (error) => console.log("Login Failed:", error),
+  });
+
+  // log out function to log the user out of google and set the profile array to null
+  const logOut = () => {
+    googleLogout();
+    setProfile(null);
+    dispatch(setUsersData([]));
+    localStorage.removeItem("access_token");
+  };
+
+  useEffect(() => {
+    const token = localStorage.getItem("access_token");
+    if (token) {
+      axios
+        .get(
+          `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${token}`,
+          {
+            headers: {
+              Authorization: `Bearer ${user.access_token}`,
+              Accept: "application/json",
+            },
+          }
+        )
+        .then((res) => {
+          setProfile(res.data);
+          dispatch(setUsersData(res.data));
+          // navigate("/");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [user]);
 
   const fetchUsersData = async () => {
     await testInstance
       .get("/users")
       .then(function (response) {
         // handle success
-        console.log(response.data);
         dispatch(setUsersData(response.data));
       })
       .catch(function (error) {
@@ -27,6 +81,7 @@ export default function LoginForm() {
         console.log(error);
       });
   };
+
   const startNewTrial = async () => {
     // Navigate to another page
     await fetchUsersData();
@@ -45,6 +100,24 @@ export default function LoginForm() {
         ```
       */}
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-64 lg:px-8">
+        {/* <GoogleLogin onSuccess={responseMessage} onError={errorMessage} /> */}
+        {profile && (
+          <div>
+            <img src={profile.picture} alt="user image" />
+            <h3>User Logged in</h3>
+            <p>Name: {profile.name}</p>
+            <p>Email Address: {profile.email}</p>
+            <br />
+            <br />
+            <button
+              className="mt-4 sm:mx-auto sm:w-full sm:max-w-sm space-y-6 justify-center rounded-md px-3 py-1.5 text-sm font-semibold border-black border-2"
+              onClick={logOut}
+            >
+              Log out
+            </button>
+          </div>
+        )}
+
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
             Sign in to your account
@@ -107,6 +180,12 @@ export default function LoginForm() {
                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
                 Sign in
+              </button>
+              <button
+                className="mt-4 sm:mx-auto sm:w-full sm:max-w-sm space-y-6 justify-center rounded-md px-3 py-1.5 text-sm font-semibold border-black border-2"
+                onClick={() => login()}
+              >
+                Sign in with Google 🚀{" "}
               </button>
             </div>
           </form>
