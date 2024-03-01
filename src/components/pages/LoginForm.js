@@ -41,7 +41,7 @@ export default function LoginForm() {
   const logOut = () => {
     googleLogout();
     setProfile(null);
-    dispatch(setUsersData([]));
+    dispatch(setUsersData());
     localStorage.removeItem("access_token");
   };
 

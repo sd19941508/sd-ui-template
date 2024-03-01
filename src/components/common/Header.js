@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import axios from "axios";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { Dialog } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
@@ -9,6 +10,8 @@ import {
   incrementByAmount,
   getUsers,
 } from "../../reducers/counterSlice";
+import { setUsersData } from "../../reducers/usersReducer";
+import { authInstance, debounce } from "../../api/base-api/Oauth-api";
 
 export default function LoginForm() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -16,9 +19,31 @@ export default function LoginForm() {
   const count = useSelector((state) => state.counter.value);
   const userData = useSelector((state) => state.users.userData);
 
+  const isSignInUser = useSelector((state) => state.users);
   const dispatch = useDispatch();
 
+  const isUserSignIn = () => {
+    const token = localStorage.getItem("access_token");
+    if (token) {
+      authInstance
+        .get(`userinfo`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: "application/json",
+          },
+        })
+        .then((res) => {
+          dispatch(setUsersData(res.data));
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  };
+
   useEffect(() => {
+    debounce(isUserSignIn, 500);
+
     dispatch(increment());
     dispatch(decrement());
     dispatch(incrementByAmount(40));
@@ -36,6 +61,8 @@ export default function LoginForm() {
       <header className="absolute inset-x-0 top-0 z-50">
         {/* Redux count:{count} */}
         {/* User: {JSON.stringify(userData.length === 0 ? "LIST" : userData)} */}
+        <hr />
+        <p>{JSON.stringify(isSignInUser)}</p>
         <nav
           className="flex items-center justify-between p-6 lg:px-8"
           aria-label="Global"
